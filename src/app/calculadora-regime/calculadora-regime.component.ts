@@ -119,13 +119,30 @@ export class CalculadoraRegimeComponent {
   }
 
   calcularValorDiasPena(pena: Pena): void {
-    let inicio = moment();
-    let fim = moment(inicio).add(pena.anos, 'years').add(pena.meses, 'months').add(pena.dias, 'days');
-    let totalDias = fim.diff(inicio, 'days');
+    debugger
+    let dataAtual = new Date();
+    let dataFinal = new Date(dataAtual.getFullYear() + pena.anos, dataAtual.getMonth() + pena.meses, dataAtual.getDate() + pena.dias);
+
+    let totalDias = this.diferencaEmDias(dataAtual, dataFinal);
 
     pena.valorSelecionado = Number(pena.valueRegime.value);
     pena.valorDiasPena = totalDias * (pena.valorSelecionado / 100);
   }
+
+  diferencaEmDias(data1: Date, data2: Date): number {
+    // Configurar ambas as datas para o início do dia (meia-noite)
+    let inicio = new Date(data1.getFullYear(), data1.getMonth(), data1.getDate());
+    inicio.setHours(0, 0, 0, 0);
+
+    let fim = new Date(data2.getFullYear(), data2.getMonth(), data2.getDate());
+    fim.setHours(0, 0, 0, 0);
+
+    const umDia = 24 * 60 * 60 * 1000; // milissegundos em um dia
+    // Usar Math.ceil para garantir que o último dia seja contado integralmente
+    return Math.ceil((fim.getTime() - inicio.getTime()) / umDia);
+  }
+
+
 
 
   calcularDataRegime(pena: Pena): void {
@@ -138,16 +155,19 @@ export class CalculadoraRegimeComponent {
       let diferencaDiasTotal = diferencaTempoTotal / (1000 * 3600 * 24);
 
       let porcentagemDias = 0
+      let totalDiasPena = 0
+      debugger
       this.penas.forEach(p => {
         if (p.valorSelecionado) {
-          porcentagemDias += Math.round(diferencaDiasTotal * (p.valorSelecionado / 100));
+          totalDiasPena += p.valorDiasPena
+          // porcentagemDias += Math.round(diferencaDiasTotal * (p.valorSelecionado / 100));
         } else {
           alert('Certifique-se de que todas as datas e valores estão definidos corretamente.');
         }
       });
 
       let dataRegime = new Date(dataInicio);
-      dataRegime.setDate(dataRegime.getDate() + porcentagemDias);
+      dataRegime.setDate(dataRegime.getDate() + totalDiasPena);
       pena.dataRegime = dataRegime.toISOString().substring(0, 10);
 
       this.dataRegime = pena.dataRegime
