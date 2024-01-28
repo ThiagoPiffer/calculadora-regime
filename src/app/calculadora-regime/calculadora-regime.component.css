@@ -1,0 +1,41 @@
+::ng-deep .p-inputnumber-input {
+  width: 50px !important;
+}
+
+input {
+  height: 30px !important;
+}
+
+::ng-deep .p-inputtext {
+  height: 30px !important;
+}
+
+::ng-deep .p-ripple {
+  height: 30px !important;
+}
+
+::ng-deep .p-selectbutton .p-highlight {
+  background-color: gray !important;
+  border-color: gray !important; /* Se você também quiser alterar a cor da borda */
+}
+
+.custom-checkbox-calculadora {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background: white;
+  border: 1px solid rgb(233, 9, 9);
+  cursor: pointer;
+}
+
+.custom-checkbox-calculadora input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.custom-checkbox-calculadora.checked {
+  background-color: rgb(175, 8, 8);
+}
+
+

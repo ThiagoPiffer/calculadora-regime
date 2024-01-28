@@ -1,10 +1,25 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CommonModule, } from '@angular/common';
 
-const routes: Routes = [];
+import { ButtonModule } from 'primeng/button';
+
+import { CalculadoraRegimeComponent } from './calculadora-regime/calculadora-regime.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    redirectTo: 'calculadora-regime',
+    pathMatch: 'full',
+  },
+  {
+    path: 'calculadora-regime',
+    component: CalculadoraRegimeComponent
+  },
+];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [CommonModule, ButtonModule, RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

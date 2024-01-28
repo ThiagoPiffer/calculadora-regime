@@ -1,0 +1,98 @@
+<p-toast></p-toast>
+
+<div class="conteudo2">
+  <div class="row mt-3">
+    <div class="col-6 mx-auto">
+      <h2 class="mb-3">Calculadora de Regime</h2>
+      <div class="box m-2 p-3 rounded-box">
+        <div class="row p-1 align-items-center">
+            <label class="col-2" for="dataInicio">Data base:</label>
+            <p-calendar class="col-3" appendTo="body" [(ngModel)]="dataInicio" [disabled]="true"></p-calendar>
+
+            <input class="col-1 custom-checkbox-calculadora" type="checkbox"  [(ngModel)]="PossuiDataPrisaoDataInicioDiferente" (click)="togglePossuiDataPrisaoDataInicioDiferente()" />
+            <label class="col-3"style="padding-left: 5px;">Inserir Datas diferentes</label>
+          </div>
+          <div class="row p-1 align-items-center">
+            <label class="col-2" for="dataInicio">Data prisao:</label>
+            <p-calendar class="col-3 custom-calendar" appendTo="body" [(ngModel)]="dataInicio"></p-calendar>
+
+            <input class="col-1 custom-checkbox-calculadora" type="checkbox" [(ngModel)]="PossuiDataRemidos" (click)="togglePossuiDataRemidos()" />
+            <label class="col-3"style="padding-left: 5px;">Inserir dias remídos</label>
+          </div>
+          <div class="row p-1 align-items-center" *ngIf="PossuiDataRemidos">
+            <label class="col-2" for="dataInicio">Dias remídos:</label>
+            <p-inputNumber class="col-3"  [(ngModel)]="diasRemidos"></p-inputNumber>
+          </div>
+      </div>
+
+      <button class="btn" (click)="addPena()">
+        <i class="fa fa-plus fa-1x"></i> Adicionar pena
+      </button>
+
+      <div *ngFor="let pena of penas; let i = index" class="box m-2 p-2 rounded-box">
+        <div class="row p-1">
+          <!-- Anos -->
+          <label class="col-2">Anos:</label>
+          <p-inputNumber class="col-2" [(ngModel)]="pena.anos" name="anos{{i}}" inputId="anos{{i}}" [min]="0" [useGrouping]="false" (ngModelChange)="updateDescricaoPena(pena)"></p-inputNumber>
+
+          <!-- Descrição da Pena -->
+          <label class="col-3">Descrição: </label>
+          <label class="col-5">{{pena.descricaoPena}}</label>
+        </div>
+
+        <div class="row p-1">
+          <!-- Meses -->
+          <label class="col-2">Meses:</label>
+          <p-inputNumber class="col-2" [(ngModel)]="pena.meses" name="meses{{i}}" inputId="meses{{i}}" [min]="0" [useGrouping]="false" (ngModelChange)="updateDescricaoPena(pena)"></p-inputNumber>
+
+          <!-- Valor Dias Pena -->
+          <label class="col-3">Valor Dias Pena: </label>
+          <label class="col-5">{{pena.valorDiasPena === 0 ? '' : pena.valorDiasPena}}</label>
+        </div>
+
+        <div class="row p-1">
+          <!-- Dias -->
+          <label class="col-2">Dias:</label>
+          <p-inputNumber class="col-2" [(ngModel)]="pena.dias" name="dias{{i}}" inputId="dias{{i}}" [min]="0" [useGrouping]="false" (ngModelChange)="updateDescricaoPena(pena)"></p-inputNumber>
+          <div class="col-8">
+          </div>
+        </div>
+
+        <!-- Select Buttons -->
+        <div class="col-12 p-1 d-flex align-items-center">
+          <label class="col-2">Regime: </label>
+          <div class="col-10 p-1">
+            <p-selectButton [options]="justifyOptions" [(ngModel)]="pena.valueRegime" optionLabel="icon" (ngModelChange)="calcularDataRegime(pena)">
+              <ng-template let-item pTemplate>
+                <i [class]="item.icon"></i> {{ item.label }}
+              </ng-template>
+            </p-selectButton>
+          </div>
+        </div>
+      </div>
+
+      <div class="box m-2 p-3 rounded-box">
+        <div class="p-1">
+          <label class="col-4" for="dataFinal">Data Alcance da progressão:</label>
+          <input  id="dataFinal" pInputText [ngModel]="dataFinal | date:'dd-MM-yyyy'" name="dataFinal" required readonly>
+        </div>
+
+        <div class="p-1">
+          <label class="col-4" for="dataRegime">Data final cumprimento da pena:</label>
+          <input  id="dataRegime" pInputText [ngModel]="dataRegime | date:'dd-MM-yyyy'" name="dataRegime" required readonly>
+        </div>
+
+        <div class="row my-2">
+          <div class="col-12 text-end">
+            <!-- <p-button icon="fa-solid fa-calculator" label="Calcular Data Final" styleClass="p-button-text" (click)="calcularDataFinal()"></p-button> -->
+            <!-- <p-button icon="fa-solid fa-calculator" label="Calcular Data Regime" styleClass="p-button-text" (click)="calcularDataRegime()"></p-button> -->
+          </div>
+        </div>
+
+        <div>
+          <button pButton type="submit" style="display: none;" label="Enviar"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
