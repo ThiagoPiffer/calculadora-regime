@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Pena } from '../models/Pena';
+import * as moment from 'moment';
+
 
 @Component({
   selector: 'app-calculadora-regime',
@@ -117,7 +119,10 @@ export class CalculadoraRegimeComponent {
   }
 
   calcularValorDiasPena(pena: Pena): void {
-    let totalDias = pena.anos * 365 + pena.meses * 30 + pena.dias;
+    let inicio = moment();
+    let fim = moment(inicio).add(pena.anos, 'years').add(pena.meses, 'months').add(pena.dias, 'days');
+    let totalDias = fim.diff(inicio, 'days');
+
     pena.valorSelecionado = Number(pena.valueRegime.value);
     pena.valorDiasPena = totalDias * (pena.valorSelecionado / 100);
   }
