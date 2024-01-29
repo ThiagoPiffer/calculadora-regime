@@ -90,38 +90,52 @@ export class CalculadoraRegimeComponent {
     if (this.dataInicio) {
       let data = new Date(this.dataInicio);
       this.penas.forEach(pena => {
-        if (this.dataInicio) { // Verificação adicional para garantir que não é null
-          data.setFullYear(data.getFullYear() + pena.anos);
-          data.setMonth(data.getMonth() + pena.meses);
-          data.setDate(data.getDate() + pena.dias);
+        if (this.dataInicio) {
+          // Convertendo anos e meses para dias
+          let diasTotais = (pena.anos * 365) + (pena.meses * 30) + pena.dias;
+
+          // Adicionando a quantidade total de dias à data
+          data = new Date(data.getTime() + diasTotais * 24 * 60 * 60 * 1000);
         }
       });
+
+      if (this.PossuiDataRemidos)
+        data.setDate(data.getDate() - this.diasRemidos);
 
       this.dataFinal = data.toISOString().substring(0, 10);
     }
   }
 
 
+  calcularValorDiasPena(pena: Pena): void {
+    let inicio = moment();
 
+    // Convertendo anos e meses para dias
+    let diasTotais = (pena.anos * 365) + (pena.meses * 30) + pena.dias;
 
-  private formatDate(date: Date): string {
-    const d = new Date(date);
-    let month = '' + (d.getMonth() + 1);
-    let day = '' + d.getDate();
-    const year = d.getFullYear();
+    // Adicionando a quantidade total de dias ao momento inicial
+    let fim = moment(inicio).add(diasTotais, 'days');
 
-    if (month.length < 2)
-        month = '0' + month;
-    if (day.length < 2)
-        day = '0' + day;
+    // Calculando a diferença em dias
+    let totalDias = fim.diff(inicio, 'days');
 
-    return [year, month, day].join('-');
+    pena.valorSelecionado = Number(pena.valueRegime.value);
+    pena.valorDiasPena = totalDias * (pena.valorSelecionado / 100);
   }
 
-  calcularValorDiasPena(pena: Pena): void {
+
+  calcularValorDiasPena1(pena: Pena): void {
     debugger
     let dataAtual = new Date();
-    let dataFinal = new Date(dataAtual.getFullYear() + pena.anos, dataAtual.getMonth() + pena.meses, dataAtual.getDate() + pena.dias);
+
+    let dataFinal = new Date(dataAtual);
+
+    // Convertendo anos e meses para dias
+    let diasTotais = (pena.anos * 365) + (pena.meses * 30) + pena.dias;
+
+    // Adicionando a quantidade total de dias à data atual
+    dataFinal = new Date(dataFinal.getTime() + diasTotais * 24 * 60 * 60 * 1000);
+
 
     let totalDias = this.diferencaEmDias(dataAtual, dataFinal);
 
@@ -168,6 +182,10 @@ export class CalculadoraRegimeComponent {
 
       let dataRegime = new Date(dataInicio);
       dataRegime.setDate(dataRegime.getDate() + totalDiasPena);
+
+      if (this.PossuiDataRemidos)
+        dataRegime.setDate(dataRegime.getDate() - this.diasRemidos);
+
       pena.dataRegime = dataRegime.toISOString().substring(0, 10);
 
       this.dataRegime = pena.dataRegime
